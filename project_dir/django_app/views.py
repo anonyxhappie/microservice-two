@@ -26,10 +26,11 @@ def send_message(request):
  
     Message.objects.create(receiver=to, sender=CURRENT_SERVER_NAME, message=message)
     
-    # TODO: send message to respective server
-    # url = f'{BASE_URL_MAPPING[to]}/notify?from={CURRENT_SERVER_NAME}&message={message}'
-    # response = requests.get(url)
-    # print(response.text)
+    url = f'{BASE_URL_MAPPING[to]}/notify?from={CURRENT_SERVER_NAME}&message={message}'
+    response = requests.get(url)
+    if response.status_code != 200:
+        return HttpResponse(f"<h1>Failed to send message to: {to}</h1>")
+
     return HttpResponse(f"<h1>Message sent to: {to}</h1>")
 
 def handle_incoming_messages(request):
@@ -47,7 +48,7 @@ def handle_incoming_messages(request):
 
 def get_messages(_):
     messages = Message.objects.filter().order_by('-created_at')
-    container = '<div>'
+    container = '<h1>Messages:</h1><div>'
     for m in messages:
         container += f'''
             <p>{m.sender} -> {m.receiver} : <b>{m.message}</b> ({m.created_at})</p>

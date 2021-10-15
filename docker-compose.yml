@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  ms1:
+    container_name: ms1
+    hostname: ms1
+    restart: always
+    build: .
+    ports:
+      - 8000:8000
+    env_file: .env
+    environment:
+      DEBUG: 'true'
+      CURRENT_SERVER_NAME: 'ms1'
+      SERVER_2: 'ms2'
+      SERVER_3: 'ms3'
+      SERVER_2_URL: 'http://ms2:8001'
+      SERVER_3_URL: 'http://ms3:8002'
+    command: python manage.py runserver 0.0.0.0:8000
+
+  ms2:
+    container_name: ms2
+    hostname: ms2
+    restart: always
+    build: .
+    ports:
+      - 8001:8001
+    env_file: .env
+    environment:
+      DEBUG: 'true'
+      CURRENT_SERVER_NAME: 'ms2'
+      SERVER_2: 'ms1'
+      SERVER_3: 'ms3'
+      SERVER_2_URL: 'http://ms1:8000'
+      SERVER_3_URL: 'http://ms3:8002'
+    command: python manage.py runserver 0.0.0.0:8001
+
+  ms3:
+    container_name: ms3
+    hostname: ms3
+    restart: always
+    build: .
+    ports:
+      - 8002:8002
+    env_file: .env
+    environment:
+      DEBUG: 'true'
+      CURRENT_SERVER_NAME: 'ms3'
+      SERVER_2: 'ms1'
+      SERVER_3: 'ms2'
+      SERVER_2_URL: 'http://ms1:8000'
+      SERVER_3_URL: 'http://ms2:8001'
+    command: python manage.py runserver 0.0.0.0:8002
