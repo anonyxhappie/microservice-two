@@ -126,9 +126,9 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CURRENT_SERVER_NAME = os.environ.get('CURRENT_SERVER_NAME', 'ms1')
-SERVER_2 = os.environ.get('SERVER_2', 'ms2')
-SERVER_3 = os.environ.get('SERVER_3', 'ms3')
-SERVER_2_URL = os.environ.get('SERVER_2_URL', 'http://localhost:8001')
-SERVER_3_URL = os.environ.get('SERVER_3_URL', 'http://localhost:8002')
-OTHER_SERVERS = [SERVER_2, SERVER_3]
-BASE_URL_MAPPING = {SERVER_2: SERVER_2_URL, SERVER_3: SERVER_3_URL}
+BASE_URL_MAPPING = eval(os.environ.get('BASE_URL_MAPPING', "{}"))
+OTHER_SERVERS = list(BASE_URL_MAPPING.keys())
+
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
+RABBITMQ_USER = os.environ.get('RABBITMQ_USER', 'guest')
+RABBITMQ_PASS = os.environ.get('RABBITMQ_PASS', 'guest')

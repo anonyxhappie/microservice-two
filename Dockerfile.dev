@@ -1,0 +1,32 @@
+FROM python:3.6-slim
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /common /code1 /code2 /code3
+RUN pip install --upgrade pip
+
+WORKDIR /common
+
+COPY ./requirements.txt /common/
+COPY ./start.sh /common/
+
+RUN pip install -r requirements.txt
+COPY ./project_dir /code1/
+WORKDIR /code1
+RUN python manage.py migrate
+
+COPY ./project_dir /code2/
+WORKDIR /code2
+RUN python manage.py migrate
+
+COPY ./project_dir /code3/
+WORKDIR /code3
+RUN python manage.py migrate
+
+EXPOSE 8000 8001 8002
+
+# RUN chmod +x /common/start.sh
+
+# CMD ["/common/start.sh"]
+
+# CMD ["python", "/code1/manage.py", "runserver", "0.0.0.0:8000"]

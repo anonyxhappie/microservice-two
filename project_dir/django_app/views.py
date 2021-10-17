@@ -1,7 +1,12 @@
 import requests
 from django.http import HttpResponse
+from project_dir.settings import (
+    CURRENT_SERVER_NAME,
+    OTHER_SERVERS,
+    BASE_URL_MAPPING)
+
 from .models import Message
-from project_dir.settings import CURRENT_SERVER_NAME, OTHER_SERVERS, BASE_URL_MAPPING
+from .producer import publish
 
 def home(request):
     return HttpResponse(f'''
@@ -26,10 +31,11 @@ def send_message(request):
  
     Message.objects.create(receiver=to, sender=CURRENT_SERVER_NAME, message=message)
     
-    url = f'{BASE_URL_MAPPING[to]}/notify?from={CURRENT_SERVER_NAME}&message={message}'
-    response = requests.get(url)
-    if response.status_code != 200:
-        return HttpResponse(f"<h1>Failed to send message to: {to}</h1>")
+    publish('new_message', {"from": CURRENT_SERVER_NAME, "message": message})
+    # url = f'{BASE_URL_MAPPING[to]}/notify?from={CURRENT_SERVER_NAME}&message={message}'
+    # response = requests.get(url)
+    # if response.status_code != 200:
+    #     return HttpResponse(f"<h1>Failed to send message to: {to}</h1>")
 
     return HttpResponse(f"<h1>Message sent to: {to}</h1>")
 

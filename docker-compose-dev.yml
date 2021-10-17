@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  one:
+    container_name: one
+    hostname: one
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8000:8000
+      - 8001:8001
+      - 8002:8002
+    env_file: .env
+    environment:
+      DEBUG: 'true'
+      CURRENT_SERVER_NAME: 'ms1'
+      OTHER_SERVERS: "{'ms2': 'http://localhost:8001', 'ms3': 'http://localhost:8002'}"
+      RABBITMQ_HOST: 'rabbitmq'
+      RABBITMQ_USER: 'user'
+      RABBITMQ_PASS: 'bitnami'
+    command: python manage.py runserver 0.0.0.0:8000

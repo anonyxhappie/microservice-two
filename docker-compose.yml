@@ -1,6 +1,23 @@
 version: '3'
 
 services:
+
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rmq
+    image: docker.io/bitnami/rabbitmq:3.9
+    ports:
+      - 4369:4369
+      - 5551:5551
+      - 5552:5552
+      - 5672:5672
+      - 25672:25672
+      - 15672:15672
+    environment:
+      - RABBITMQ_SECURE_PASSWORD=yes
+    volumes:
+      - 'rabbitmq_data:/bitnami'
+
   ms1:
     container_name: ms1
     hostname: ms1
@@ -12,11 +29,13 @@ services:
     environment:
       DEBUG: 'true'
       CURRENT_SERVER_NAME: 'ms1'
-      SERVER_2: 'ms2'
-      SERVER_3: 'ms3'
-      SERVER_2_URL: 'http://ms2:8001'
-      SERVER_3_URL: 'http://ms3:8002'
+      OTHER_SERVERS: "{'ms2': 'http://ms2:8001', 'ms3': 'http://ms3:8002'}"
+      RABBITMQ_HOST: 'rmq'
+      RABBITMQ_USER: 'user'
+      RABBITMQ_PASS: 'bitnami'
     command: python manage.py runserver 0.0.0.0:8000
+    links:
+      - rabbitmq
 
   ms2:
     container_name: ms2
@@ -29,11 +48,13 @@ services:
     environment:
       DEBUG: 'true'
       CURRENT_SERVER_NAME: 'ms2'
-      SERVER_2: 'ms1'
-      SERVER_3: 'ms3'
-      SERVER_2_URL: 'http://ms1:8000'
-      SERVER_3_URL: 'http://ms3:8002'
-    command: python manage.py runserver 0.0.0.0:8001
+      OTHER_SERVERS: "{'ms1': 'http://ms1:8000', 'ms3': 'http://ms3:8002'}"
+      RABBITMQ_HOST: 'rmq'
+      RABBITMQ_USER: 'user'
+      RABBITMQ_PASS: 'bitnami'
+    command: python manage.py runserver 0.0.0.0:8001 && python consumer.py
+    links:
+      - rabbitmq
 
   ms3:
     container_name: ms3
@@ -46,8 +67,14 @@ services:
     environment:
       DEBUG: 'true'
       CURRENT_SERVER_NAME: 'ms3'
-      SERVER_2: 'ms1'
-      SERVER_3: 'ms2'
-      SERVER_2_URL: 'http://ms1:8000'
-      SERVER_3_URL: 'http://ms2:8001'
-    command: python manage.py runserver 0.0.0.0:8002
+      OTHER_SERVERS: "{'ms1': 'http://ms1:8000', 'ms2': 'http://ms2:80021}"
+      RABBITMQ_HOST: 'rmq'
+      RABBITMQ_USER: 'user'
+      RABBITMQ_PASS: 'bitnami'
+    command: python manage.py runserver 0.0.0.0:8002 && python consumer.py
+    links:
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
+    driver: local
