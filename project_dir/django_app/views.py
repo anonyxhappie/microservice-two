@@ -31,7 +31,7 @@ def send_message(request):
  
     Message.objects.create(receiver=to, sender=CURRENT_SERVER_NAME, message=message)
     
-    publish('new_message', {"from": CURRENT_SERVER_NAME, "message": message})
+    publish('new_message', f"{to}_messages", {"from": CURRENT_SERVER_NAME, "message": message})
     # url = f'{BASE_URL_MAPPING[to]}/notify?from={CURRENT_SERVER_NAME}&message={message}'
     # response = requests.get(url)
     # if response.status_code != 200:
