@@ -26,6 +26,6 @@ def callback(ch, method, properties, body):
         Message.objects.create(receiver=CURRENT_SERVER_NAME, sender=data['from'], message=data['message'])
         print("new_message received")
 
-channel.basic_consume(queue='ms1_messages', on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue='ms2_messages', on_message_callback=callback, auto_ack=True)
 print("Started Consuming...")
 channel.start_consuming()
