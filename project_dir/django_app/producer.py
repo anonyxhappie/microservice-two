@@ -4,7 +4,7 @@ import pika
 
 # credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
 # connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST, heartbeat=600, blocked_connection_timeout=300, credentials=credentials))
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', heartbeat=600, blocked_connection_timeout=300, credentials=credentials))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', heartbeat=600, blocked_connection_timeout=300))
 channel = connection.channel()
 
 def publish(method, queue, body):
