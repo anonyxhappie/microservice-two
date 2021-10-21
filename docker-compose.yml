@@ -4,7 +4,6 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    hostname: rmq
     image: docker.io/bitnami/rabbitmq:3.9
     ports:
       - 4369:4369
@@ -15,6 +14,8 @@ services:
       - 15672:15672
     environment:
       - RABBITMQ_SECURE_PASSWORD=yes
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
     volumes:
       - 'rabbitmq_data:/bitnami'
 
@@ -26,13 +27,6 @@ services:
     ports:
       - 8000:8000
     env_file: .env
-    environment:
-      DEBUG: 'true'
-      CURRENT_SERVER_NAME: 'ms1'
-      OTHER_SERVERS: "{'ms2': 'http://ms2:8001', 'ms3': 'http://ms3:8002'}"
-      RABBITMQ_HOST: 'rmq'
-      RABBITMQ_USER: 'user'
-      RABBITMQ_PASS: 'bitnami'
     command: python manage.py runserver 0.0.0.0:8000
     links:
       - rabbitmq
@@ -45,13 +39,6 @@ services:
     ports:
       - 8001:8001
     env_file: .env
-    environment:
-      DEBUG: 'true'
-      CURRENT_SERVER_NAME: 'ms2'
-      OTHER_SERVERS: "{'ms1': 'http://ms1:8000', 'ms3': 'http://ms3:8002'}"
-      RABBITMQ_HOST: 'rmq'
-      RABBITMQ_USER: 'user'
-      RABBITMQ_PASS: 'bitnami'
     command: python manage.py runserver 0.0.0.0:8001 && python consumer.py
     links:
       - rabbitmq
@@ -64,13 +51,6 @@ services:
     ports:
       - 8002:8002
     env_file: .env
-    environment:
-      DEBUG: 'true'
-      CURRENT_SERVER_NAME: 'ms3'
-      OTHER_SERVERS: "{'ms1': 'http://ms1:8000', 'ms2': 'http://ms2:80021}"
-      RABBITMQ_HOST: 'rmq'
-      RABBITMQ_USER: 'user'
-      RABBITMQ_PASS: 'bitnami'
     command: python manage.py runserver 0.0.0.0:8002 && python consumer.py
     links:
       - rabbitmq

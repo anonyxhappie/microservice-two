@@ -3,8 +3,8 @@ version: '3'
 services:
   one:
     container_name: one
-    hostname: one
     restart: always
+    tty: true
     build:
       context: .
       dockerfile: ./Dockerfile.mq
@@ -14,4 +14,4 @@ services:
       - 8002:8002
       - 5672:5672
       - 15672:15672
-    command: python /microservice-one/project_dir/manage.py runserver 0.0.0.0:8000 & && python /microservice-one/project_dir/scripts/consumer.py &
+    # command: python /microservice-one/project_dir/manage.py runserver 8000 && python /microservice-one/project_dir/scripts/consumer.py && python /microservice-two/project_dir/manage.py runserver 8001 && python /microservice-two/project_dir/scripts/consumer.py && python /microservice-three/project_dir/manage.py runserver 8002 && python /microservice-three/project_dir/scripts/consumer.py

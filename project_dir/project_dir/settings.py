@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,5 +132,8 @@ BASE_URL_MAPPING = eval(os.environ.get('BASE_URL_MAPPING', "{'ms1': 'http://loca
 OTHER_SERVERS = list(BASE_URL_MAPPING.keys())
 
 RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
+RABBITMQ_VHOST = os.environ.get('RABBITMQ_VHOST', '/')
 RABBITMQ_USER = os.environ.get('RABBITMQ_USER', 'guest')
 RABBITMQ_PASS = os.environ.get('RABBITMQ_PASS', 'guest')
+
+MSG_QUEUE = os.environ.get('MSG_QUEUE', 'ms2_messages')
