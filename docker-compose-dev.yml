@@ -4,6 +4,7 @@ services:
   one:
     container_name: one
     restart: always
+    tty: true
     build:
       context: .
       dockerfile: ./Dockerfile.mq

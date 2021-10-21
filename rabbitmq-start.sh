@@ -1,11 +1,19 @@
 #!/bin/bash
 
-rabbitmq-server &
-sleep 30
+rabbitmq-server &> output.log & disown
+sleep 60
 rabbitmqctl status
-# rabbitmqctl add_user guest guest
-# rabbitmqctl set_user_tags guest administrator
-# rabbitmqctl add_vhost my-rabbit
-# rabbitmqctl set_permissions -p my-rabbit guest ".*" ".*" ".*"
-# rabbitmqctl set_permissions -p / guest ".*" ".*" ".*"
 
+cd /microservice-one/
+python3 project_dir/manage.py migrate
+cd /microservice-two/
+python3 project_dir/manage.py migrate
+cd /microservice-three/
+python3 project_dir/manage.py migrate
+
+nohup python3 /microservice-one/project_dir/manage.py runserver 0.0.0.0:8000 &> output.log & disown
+nohup python3 /microservice-one/project_dir/consumer.py &> output.log & disown
+nohup python3 /microservice-two/project_dir/manage.py runserver 0.0.0.0:8001 &> output.log & disown
+nohup python3 /microservice-two/project_dir/consumer.py &> output.log & disown
+nohup python3 /microservice-three/project_dir/manage.py runserver 0.0.0.0:8002 &> output.log & disown
+nohup python3 /microservice-three/project_dir/consumer.py &> output.log & disown
