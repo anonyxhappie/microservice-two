@@ -14,7 +14,7 @@ from project_dir.settings import CURRENT_SERVER_NAME, RABBITMQ_HOST
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, heartbeat=600, blocked_connection_timeout=300))
 channel = connection.channel()
-channel.queue_declare(queue='ms1_messages')
+channel.queue_declare(queue='ms2_messages')
 
 def callback(ch, method, properties, body):
     print("Received in messages...", method, properties.content_type)
