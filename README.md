@@ -12,3 +12,7 @@ Install Docker & Docker Compose
 
 ### To Stop & Delete Containers & Images
 > docker-compose down
+
+
+> dc -f docker-compose-dev.yml up --build -d
+> dc -f docker-compose-dev.yml down --remove-orphans
