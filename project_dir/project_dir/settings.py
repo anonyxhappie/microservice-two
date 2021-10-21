@@ -129,7 +129,7 @@ CURRENT_SERVER_NAME = os.environ.get('CURRENT_SERVER_NAME', 'ms1')
 BASE_URL_MAPPING = eval(os.environ.get('BASE_URL_MAPPING', "{'ms2': 'http://localhost:8001', 'ms3': 'http://localhost:8002'}"))
 OTHER_SERVERS = list(BASE_URL_MAPPING.keys())
 
-RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'my-rabbit')
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
 print('RABBITMQ_HOST', RABBITMQ_HOST)
 RABBITMQ_USER = os.environ.get('RABBITMQ_USER', 'guest')
 RABBITMQ_PASS = os.environ.get('RABBITMQ_PASS', 'guest')

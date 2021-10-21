@@ -1,7 +1,7 @@
 import json
 import pika
 from project_dir.settings import RABBITMQ_HOST, RABBITMQ_USER, RABBITMQ_PASS
-
+print('RABBITMQ_HOST', RABBITMQ_HOST)
 # credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
 # connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST, heartbeat=600, blocked_connection_timeout=300, credentials=credentials))
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, heartbeat=600, blocked_connection_timeout=300))
