@@ -11,10 +11,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project_dir.settings')
 django.setup()
 from django_app.models import Message
 from project_dir.settings import CURRENT_SERVER_NAME, RABBITMQ_HOST
+MSG_QUEUE = 'ms1_messages'
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, heartbeat=600, blocked_connection_timeout=300))
 channel = connection.channel()
-channel.queue_declare(queue='ms1_messages')
+channel.queue_declare(queue=MSG_QUEUE)
 
 def callback(ch, method, properties, body):
     print("Received in messages...", method, properties.content_type)
@@ -26,6 +27,6 @@ def callback(ch, method, properties, body):
         Message.objects.create(receiver=CURRENT_SERVER_NAME, sender=data['from'], message=data['message'])
         print("new_message received")
 
-channel.basic_consume(queue='ms1_messages', on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue=MSG_QUEUE, on_message_callback=callback, auto_ack=True)
 print("Started Consuming...")
 channel.start_consuming()
