@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED 1
 RUN mkdir /common /code1 /code2 /code3
 RUN pip install --upgrade pip
 
-RUN apt-get update
+RUN apt-get update -y
 RUN apt-get install -y tar git curl nano wget dialog net-tools build-essential
 
 COPY rabbitmq-install.sh .

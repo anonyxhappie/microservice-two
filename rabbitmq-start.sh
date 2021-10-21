@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rabbitmq-server &> output.log & disown
-sleep 60
+sleep 30
 rabbitmqctl status
 
 cd /microservice-one/

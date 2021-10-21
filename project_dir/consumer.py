@@ -10,10 +10,10 @@ path.append(settings_file_path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project_dir.settings') 
 django.setup()
 from django_app.models import Message
-from project_dir.settings import CURRENT_SERVER_NAME, RABBITMQ_HOST
-MSG_QUEUE = 'ms1_messages'
+from project_dir.settings import CURRENT_SERVER_NAME, RABBITMQ_HOST, RABBITMQ_USER, RABBITMQ_PASS, RABBITMQ_VHOST, MSG_QUEUE
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, heartbeat=600, blocked_connection_timeout=300))
+credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, virtual_host=RABBITMQ_VHOST, heartbeat=600, blocked_connection_timeout=300, credentials=credentials))
 channel = connection.channel()
 channel.queue_declare(queue=MSG_QUEUE)
 
